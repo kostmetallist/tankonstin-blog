@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -24,17 +25,21 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/ping", func (c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H {
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
 			"result": "pong",
 		})
 	})
 
 	router.LoadHTMLGlob("public/templates/*")
-	router.GET("/timer", func (c *gin.Context) {
-		c.HTML(http.StatusOK, "timer.tmpl", gin.H {
+	router.GET("/timer", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "timer.tmpl", gin.H{
 			"time": time.Now().UTC().Format(time.RFC822),
 		})
+	})
+
+	router.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusFound, "/ping")
 	})
 
 	if err = router.Run(fmt.Sprintf(":%d", portNumber)); err != nil {
